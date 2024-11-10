@@ -1,15 +1,13 @@
 <?php
-// Initialize session and DB connection
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Check if user is logged in
 if (!isset($_SESSION['userID'])) {
     header("Location: login.php");
     exit();
 }
 
-// Fetch user info
+//user info
 $queryUser = $dbCon->prepare("
     SELECT username, Fname, Lname, profilePic 
     FROM Users 
@@ -20,7 +18,7 @@ $queryUser->execute();
 $userInfo = $queryUser->fetch(PDO::FETCH_ASSOC);
 
 
-// Query to fetch user's own posts
+//user's posts
 $queryUserPosts = $dbCon->prepare("
     SELECT p.*, u.username, i.media AS first_image
     FROM Posts p
@@ -36,7 +34,7 @@ $queryUserPosts->execute();
 $userPosts = $queryUserPosts->fetchAll(PDO::FETCH_ASSOC);
 
 
-// Query to fetch liked posts
+//liked posts
 $queryLikedPosts = $dbCon->prepare("
     SELECT p.*, u.username, i.media AS first_image
     FROM Likes l
@@ -51,7 +49,7 @@ $queryLikedPosts->bindParam(':userID', $_SESSION['userID']);
 $queryLikedPosts->execute();
 $likedPosts = $queryLikedPosts->fetchAll(PDO::FETCH_ASSOC);
 
-// Query to fetch saved posts with their first image
+//saved posts
 $querySavedPosts = $dbCon->prepare("
     SELECT p.*, u.username, i.media AS first_image
     FROM Saves sp
@@ -89,7 +87,6 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
             event.currentTarget.className += " active";
         }
 
-        // Automatically open the "Posts" tab on page load
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("defaultOpen").click();
         });
@@ -177,7 +174,7 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 <style>
-        /* General Page Styling */
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -186,7 +183,7 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
             color: #333;
         }
 
-        /* Profile Header */
+
         .profile {
             display: flex;
             flex-direction: column;
@@ -214,7 +211,7 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 10px;
         }
 
-        /* Tab Container */
+
         .tab {
             display: flex;
             flex-direction: row;
@@ -244,14 +241,14 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
             font-weight: bold;
         }
 
-        /* Tab Content */
+
         .tabcontent {
             display: none;
             padding: 20px;
             background-color: white;
         }
 
-        /* Post Grid */
+   
         .post-grid {
             display: flex;
             flex-wrap: wrap;
@@ -297,7 +294,7 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
             background-color: #28a745;
         }
 
-     /* Style for posts */
+
 .tabcontent .post {
     border: 1px solid #ddd;
     padding: 15px;

@@ -1,9 +1,7 @@
 <?php
-// DB connection
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Fetch likes count and check if the current user has liked each post
 function getLikes($postId, $dbCon) {
     $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
     $likeQuery->bindParam(':postID', $postId);
@@ -19,7 +17,6 @@ function userHasLiked($postId, $userId, $dbCon) {
     return $userLikeQuery->fetchColumn() > 0;
 }
 
-// Fetch posts along with their users
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.username
     FROM Posts p
@@ -45,7 +42,6 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
             <p><?= nl2br(htmlspecialchars($getPost['content'])) ?></p>
             <p class="post-tag">
                 <?php 
-                // Fetch tags for the current post
                 $tagQuery = $dbCon->prepare("
                     SELECT t.tag 
                     FROM Post_Tags pt 
@@ -56,18 +52,15 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
                 $tagQuery->execute();
                 $tags = $tagQuery->fetchAll(PDO::FETCH_COLUMN);
                 
-                // Display tags
                 foreach ($tags as $tag): ?>
                     <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                 <?php endforeach; ?>
             </p>
         </div>
 
-        <!-- Slider for images -->
         <div class="post-image-slider" id="slider-<?= $getPost['postID'] ?>">
             <div class="slider">
                 <?php 
-                // Fetch associated images for the post
                 $imageQuery = $dbCon->prepare("
                     SELECT i.media 
                     FROM Post_Images pi 
@@ -94,12 +87,9 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
             <button class="next" onclick="changeSlide(event, '<?= $getPost['postID'] ?>', 1)">&#10095;</button>
         </div>
         <?php 
-            // Get likes count for each post
             $likeCount = getLikes($getPost['postID'], $dbCon);
-            // Check if the logged-in user has liked this post
             $userLiked = userHasLiked($getPost['postID'], $_SESSION['userID'], $dbCon);
         ?>
-        <!-- Like button and count -->
         <div class="like-section">
             <span id="like-count-<?= $getPost['postID'] ?>"><?= $likeCount ?></span> likes
             <button class="like-button" 
@@ -108,7 +98,6 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
                     style="color: <?= $userLiked ? 'blue' : 'gray' ?>;">
                 <?= $userLiked ? 'Unlike' : 'Like' ?>
             </button>
-           <!-- Save Button -->
         <button class="save-button" data-postid="<?= $getPost['postID'] ?>" onclick="savePost(this)">Save</button>  </div>
         <a href="index.php?page=singlePost&postID=<?= $getPost['postID'] ?>" class="comment-button">Comment</a>
           </div>

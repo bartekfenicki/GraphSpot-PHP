@@ -3,7 +3,7 @@
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Fetch only regular posts with type 'post'
+// posts
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.username
     FROM Posts p
@@ -21,8 +21,9 @@ foreach ($getPosts as $getPost): ?>
         <div><strong>Location:</strong> <?= htmlspecialchars($getPost['location']) ?></div>
         <div><strong>Content:</strong> <?= nl2br(htmlspecialchars($getPost['content'])) ?></div>
         
-        <!-- Fetch and Display Post Images -->
+
         <?php 
+        // images
         $imageQuery = $dbCon->prepare("
             SELECT i.media 
             FROM Post_Images pi 
@@ -52,7 +53,7 @@ foreach ($getPosts as $getPost): ?>
             <button onclick="toggleDropdown('comments-<?= $getPost['postID'] ?>')">View Comments</button>
             <div id="comments-<?= $getPost['postID'] ?>" class="dropdown-content">
                 <?php 
-                // Fetch comments for this post
+                // comments for this post
                 $commentsQuery = $dbCon->prepare("
                     SELECT c.postID, c.content, u.username
                     FROM Posts c
@@ -98,16 +99,16 @@ foreach ($getPosts as $getPost): ?>
         margin-top: 10px;
     }
     .dropdown-content {
-        display: none; /* Hidden by default */
-        position: absolute; /* Position relative to the container */
-        top: 100%; /* Position directly below the button */
+        display: none; 
+        position: absolute; 
+        top: 100%; 
         left: 0;
-        width: 100%; /* Full width of the container */
+        width: 100%; 
         padding: 10px;
         border: 1px solid #ccc;
         background-color: #f9f9f9;
         border-radius: 8px;
-        z-index: 1; /* Ensure it displays above other elements */
+        z-index: 1; 
     }
     .comment {
         border-bottom: 1px solid #ddd;
@@ -116,11 +117,9 @@ foreach ($getPosts as $getPost): ?>
 </style>
 
 <script>
-    // Toggle dropdown visibility for comments
     function toggleDropdown(id) {
         const dropdown = document.getElementById(id);
         
-        // Toggle display
         if (dropdown.style.display === "none" || dropdown.style.display === "") {
             dropdown.style.display = "block";
         } else {

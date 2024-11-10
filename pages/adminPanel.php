@@ -66,7 +66,6 @@ $dbCon = dbCon($user, $DBpassword);
         document.getElementById("defaultOpen").click();
     </script>
 
-    <!-- Styling -->
     <style scoped>
         .container {
             display: flex;
@@ -80,7 +79,6 @@ $dbCon = dbCon($user, $DBpassword);
             margin: 5px 0;
         }
 
-        /* Tab styles */
         .tab {
             overflow: hidden;
             background-color: #fff;

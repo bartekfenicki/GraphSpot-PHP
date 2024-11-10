@@ -20,7 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['userID'] = $user['userID'];
             $_SESSION['username'] = $user['username'];
 
-            // Redirect after a short delay
             header("Refresh: 1; url=../index.php");
             echo "Login successful! Redirecting...";
             exit();

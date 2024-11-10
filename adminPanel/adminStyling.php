@@ -8,7 +8,7 @@ $logoData = $query->fetch(PDO::FETCH_ASSOC);
 
 $currentLogo = $logoData ? 'data:image/png;base64,' . base64_encode($logoData['logo']) : 'assets/images/logo1.png';
 
-// Fetch all styles
+//all styles
 $stylesQuery = $dbCon->prepare("SELECT styleID, sidemenu_background, body_background, style_name, is_active FROM styles");
 $stylesQuery->execute();
 $styles = $stylesQuery->fetchAll(PDO::FETCH_ASSOC);
@@ -67,7 +67,6 @@ if (isset($_GET['status'])) {
 ?>
 
 <style>
-/* Highlight the active style option */
 #style-options .style-option {
     padding: 10px;
     border: 1px solid #ccc;

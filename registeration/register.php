@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $profilePic = $_FILES['profilePic'];
 
-    // Handle profile picture
+
     $profilePicData = null;
     if (is_uploaded_file($profilePic['tmp_name'])) {
         $profilePicData = file_get_contents($profilePic['tmp_name']);
@@ -18,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $dbcon = dbcon($user, $DBpassword);
 
-    // Check if username or email already exists
     $sql_check = "SELECT * FROM users WHERE username = :username OR email = :email";
     $stmt_check = $dbcon->prepare($sql_check);
     $stmt_check->bindParam(':username', $username);
@@ -30,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Insert new user
     $sql = "INSERT INTO users (Fname, Lname, email, password, username, profilePic) 
             VALUES (:fname, :lname, :email, :password, :username, :profilePic)";
     $stmt = $dbcon->prepare($sql);
@@ -42,10 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':profilePic', $profilePicData, PDO::PARAM_LOB);
 
     if ($stmt->execute()) {
-        // Start session for the new user
         $_SESSION['userID'] = $dbcon->lastInsertId();
         $_SESSION['username'] = $username;
-     // Redirect after a short delay
+
      header("Refresh: 1; url=../index.php");
      echo "Registration successful! Redirecting...";
  } else {

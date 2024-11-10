@@ -1,5 +1,4 @@
 <?php
-// DB connection
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 

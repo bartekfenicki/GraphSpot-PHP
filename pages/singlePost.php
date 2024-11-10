@@ -9,7 +9,7 @@ if (!isset($_GET['postID'])) {
 
 $postID = $_GET['postID'];
 
-// Fetch the post details
+//post details
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.username 
     FROM Posts p 
@@ -25,7 +25,7 @@ if (!$post) {
     exit();
 }
 
-// Fetch comments for the post
+//comments
 $commentQuery = $dbCon->prepare("
     SELECT p.*, u.username 
     FROM Posts p 
@@ -37,7 +37,7 @@ $commentQuery->bindParam(':postID', $postID, PDO::PARAM_INT);
 $commentQuery->execute();
 $comments = $commentQuery->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch images for the post
+//images
 $imageQuery = $dbCon->prepare("
     SELECT i.media 
     FROM Post_Images pi 
@@ -48,7 +48,7 @@ $imageQuery->bindParam(':postID', $postID, PDO::PARAM_INT);
 $imageQuery->execute();
 $images = $imageQuery->fetchAll(PDO::FETCH_COLUMN);
 
-// Fetch likes count and whether the user liked the post
+//likes count
 function getLikes($postId, $dbCon) {
     $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
     $likeQuery->bindParam(':postID', $postId);
@@ -77,8 +77,6 @@ $userLiked = userHasLiked($postID, $_SESSION['userID'], $dbCon);
 <body>
 
 <div class="single-post-container">
-    <!-- Image Section with Slider -->
-    <!-- Slider for images -->
     <div class="all-post">
             <div class="post-image-slider" id="slider-<?= $postID ?>">
                 <div class="slider">
@@ -149,7 +147,7 @@ $userLiked = userHasLiked($postID, $_SESSION['userID'], $dbCon);
     <form action="posts/addComment.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="parentPostID" value="<?= $postID ?>">
         <textarea name="content" placeholder="Add a comment..." required></textarea>
-        <input type="file" name="image" accept="image/*"> <!-- Optional image input for comment -->
+        <input type="file" name="image" accept="image/*">
         <button type="submit">Post Comment</button>
     </form>
 </div>

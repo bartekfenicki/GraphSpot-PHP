@@ -3,7 +3,6 @@ session_start();
 require_once "../dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Check if user is logged in
 if (!isset($_SESSION['userID'])) {
     echo "Please log in to add a post.";
     exit;
@@ -11,16 +10,15 @@ if (!isset($_SESSION['userID'])) {
 
 $userID = $_SESSION['userID'];
 
-// Collect form data
 $content = $_POST['content'];
 $location = $_POST['location'] ?? null;
-$tags = explode(',', $_POST['tags']); // Assume tags are input as comma-separated values
+$tags = explode(',', $_POST['tags']); 
 
 try {
-    // Start a transaction
+
     $dbCon->beginTransaction();
 
-    // Insert post data into the `posts` table
+
     $postQuery = $dbCon->prepare("INSERT INTO posts (content, location, type, userID) VALUES (:content, :location, 'post', :userID)");
     $postQuery->bindParam(':content', $content);
     $postQuery->bindParam(':location', $location);
@@ -43,12 +41,12 @@ try {
         $postTagQuery->execute();
     }
 
-    // Handle image uploads (up to 5 images)
+    // Handle image uploads
     $postImageQuery = $dbCon->prepare("INSERT INTO post_images (postID, imageID) VALUES (:postID, :imageID)");
     $imageQuery = $dbCon->prepare("INSERT INTO images (media) VALUES (:media)");
 
     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
-        if ($index >= 5) break; // Limit to 5 images
+        if ($index >= 5) break;
 
         $imageData = file_get_contents($tmpName);
         $imageQuery->bindParam(':media', $imageData, PDO::PARAM_LOB);
@@ -60,7 +58,6 @@ try {
         $postImageQuery->execute();
     }
 
-    // Commit transaction
     $dbCon->commit();
     echo "Post added successfully!";
     header("Location: ../index.php?page=adminPanel");

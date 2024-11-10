@@ -3,7 +3,7 @@
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Fetch users
+//users
 $queryUser = $dbCon->prepare("SELECT * FROM Users");
 $queryUser->execute();
 $getUsers = $queryUser->fetchAll(PDO::FETCH_ASSOC);
