@@ -71,7 +71,6 @@ $savedPosts = $querySavedPosts->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
-    <link rel="stylesheet" href="../styles.css">
     <script>
         function openTab(event, tabName) {
             var i, tabcontent, tablinks;

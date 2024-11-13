@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $dbcon = dbcon($user, $DBpassword);
 
-    $sql = "SELECT * FROM users WHERE username = :username";
+    $sql = "SELECT * FROM Users WHERE username = :username";
     $stmt = $dbcon->prepare($sql);
     $stmt->bindParam(':username', $username);
     $stmt->execute();
