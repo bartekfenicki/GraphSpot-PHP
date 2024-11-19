@@ -52,6 +52,13 @@ foreach ($getPosts as $getPost): ?>
                 Delete & Ban User
                 </a>
             </div>
+            <div>
+                    <?php if ($getPost['isPinned']): ?>
+                        <button onclick="updatePinStatus(<?= $getPost['postID'] ?>, 0)">Unpin</button>
+                    <?php else: ?>
+                        <button onclick="updatePinStatus(<?= $getPost['postID'] ?>, 1)">Pin</button>
+                    <?php endif; ?>
+            </div>
         </div>
 
         <!-- Comments Dropdown -->
@@ -140,6 +147,22 @@ foreach ($getPosts as $getPost): ?>
             commentsDiv.style.maxHeight = commentsDiv.scrollHeight + "px"; // Expand
             commentsDiv.classList.add('active');
         }
+    }
+    function updatePinStatus(postID, status) {
+        const formData = new FormData();
+        formData.append('postID', postID);
+        formData.append('status', status);
+
+        fetch('adminPanel/postPinned.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload(); // Refresh the page to reflect changes
+        })
+        .catch(error => console.error('Error:', error));
     }
 </script>
 
