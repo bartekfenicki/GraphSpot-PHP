@@ -50,7 +50,7 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
                 // Fetch tags for the current post
                 $tagQuery = $dbCon->prepare("
                     SELECT t.tag 
-                    FROM Post_Tags pt 
+                    FROM post_tags pt 
                     JOIN Tags t ON pt.tagID = t.tagID 
                     WHERE pt.postID = :postID
                 ");
@@ -72,7 +72,7 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
                 // Fetch associated images for the post
                 $imageQuery = $dbCon->prepare("
                     SELECT i.media 
-                    FROM Post_Images pi 
+                    FROM post_images pi 
                     JOIN Images i ON pi.imageID = i.imageID 
                     WHERE pi.postID = :postID
                 ");
