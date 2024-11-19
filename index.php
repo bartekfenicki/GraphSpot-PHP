@@ -6,7 +6,6 @@ if (!isset($_SESSION['userID'])) {
     header("Location: startPage.php");
     exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +37,17 @@ $styleData = $styleQuery->fetch(PDO::FETCH_ASSOC);
 
 $sidemenuBackground = $styleData['sidemenu_background'];
 $bodyBackground = $styleData['body_background'];
+
+$profilePicQuery = $dbCon->prepare("SELECT profilePic FROM Users WHERE userID = :userID");
+$profilePicQuery->bindParam(':userID', $_SESSION['userID']); 
+$profilePicQuery->execute();
+$profilePic = $profilePicQuery->fetch(PDO::FETCH_ASSOC);
+
+if ($profilePic && !empty($profilePic['profilePic'])) {
+    $profilePicture = 'data:image/png;base64,' . base64_encode($profilePic['profilePic']);
+} else {
+    echo "no image found";
+}
 ?>
 
 
@@ -49,9 +59,10 @@ $bodyBackground = $styleData['body_background'];
         <div class="menu-item"><a href="?page=home">Home</a></div>
         <div class="menu-item"><a href="?page=browse">Browse</a></div>
         <div class="menu-item"><a href="?page=profile">Profile</a></div>
-        <div class="menu-item"><a href="?page=saved">Saved</a></div>
         <div class="menu-item"><a href="?page=settings">Settings</a></div>
+        <?php if ($_SESSION['userRole'] === 'admin'): ?>
         <div class="menu-item"><a href="?page=adminPanel">Admin Panel</a></div>
+        <?php endif; ?>
         <button class="addMedia" onclick="openModal()">+</button>
     </div>
 
@@ -77,7 +88,7 @@ $bodyBackground = $styleData['body_background'];
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
 
-                $allowedPages = ['home', 'browse', 'profile', 'saved', 'settings', 'adminPanel', 'singlePost'];
+                $allowedPages = ['home', 'browse', 'profile', 'settings', 'adminPanel', 'singlePost', 'userProfile'];
 
                 if (in_array($page, $allowedPages)) {
 
@@ -92,6 +103,24 @@ $bodyBackground = $styleData['body_background'];
             }
         ?>
     </div>
+
+    <div class="user-info">
+    <?php if (isset($_SESSION['userID'])): ?>
+        <?php if (!isset($_GET['page']) || $_GET['page'] !== 'profile'): ?>
+            <p><?= htmlspecialchars($_SESSION['username']) ?></p>
+            <img src="<?= $profilePicture ?>" alt="Profile Picture" class="profile-pic">
+        <?php endif; ?>
+        <form action="registeration/logout.php" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    <?php else: ?>
+        <p>You are not logged in.</p>
+        <form action="registeration/logout.php" method="get">
+            <button type="submit">Login</button>
+        </form>
+    <?php endif; ?>
+</div>
+
 </body>
 
 <script>
@@ -112,19 +141,19 @@ $bodyBackground = $styleData['body_background'];
 
 </script>
 
-<style>
+<style scoped>
     body {
         background-color: <?= htmlspecialchars($bodyBackground); ?>;
     }
-.sidemenu {
-    position: fixed;
-    background: <?= htmlspecialchars($sidemenuBackground); ?>; 
-    width: 20%;
-    height: 100%;
-    display: block;
-    justify-content: center;
-    top: 0;
-}
+    .sidemenu {
+        position: fixed;
+        background: <?= htmlspecialchars($sidemenuBackground); ?>; 
+        width: 20%;
+        height: 100%;
+        display: block;
+        justify-content: center;
+        top: 0;
+    }
 .logo {
     width:50px;
     margin: 20px auto 20px auto;
@@ -162,6 +191,21 @@ $bodyBackground = $styleData['body_background'];
 .main {
     margin-left: 20%;
 }
+.user-info {
+        position: absolute; 
+        top: 0px; 
+        right: 10px; 
+        display: flex; 
+        align-items: center;
+        gap: 5px;
+    }
+
+    .profile-pic {
+        width: 40px; 
+        height: 40px; 
+        border-radius: 50%; 
+        margin-right: 10px; 
+    }
 
 </style>
 </html>

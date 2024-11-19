@@ -50,3 +50,18 @@
         font-size: 24px; 
         cursor: pointer; }
 </style>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const tags = document.getElementById('tags').value.split(',');
+        const cleanedTags = tags.map(tag => tag.trim()).filter(tag => tag !== '');
+
+        if (cleanedTags.length === 0) {
+            e.preventDefault();
+            alert('Please enter at least one valid tag.');
+        } else {
+            // Replace the input value with cleaned tags
+            document.getElementById('tags').value = cleanedTags.join(',');
+        }
+    });
+</script>

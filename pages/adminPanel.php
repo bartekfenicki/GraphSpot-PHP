@@ -2,7 +2,14 @@
 // DB connection
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
+
+
+if (!isset($_SESSION['userID']) || $_SESSION['userRole'] !== 'admin') {
+    header("Location: ../index.php"); 
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,6 +73,7 @@ $dbCon = dbCon($user, $DBpassword);
         document.getElementById("defaultOpen").click();
     </script>
 
+    <!-- Styling -->
     <style scoped>
         .container {
             display: flex;
@@ -79,6 +87,7 @@ $dbCon = dbCon($user, $DBpassword);
             margin: 5px 0;
         }
 
+        /* Tab styles */
         .tab {
             overflow: hidden;
             background-color: #fff;

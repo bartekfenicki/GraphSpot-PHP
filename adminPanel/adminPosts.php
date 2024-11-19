@@ -3,7 +3,7 @@
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// posts
+// Fetch only regular posts with type 'post'
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.username
     FROM Posts p
@@ -21,12 +21,11 @@ foreach ($getPosts as $getPost): ?>
         <div><strong>Location:</strong> <?= htmlspecialchars($getPost['location']) ?></div>
         <div><strong>Content:</strong> <?= nl2br(htmlspecialchars($getPost['content'])) ?></div>
         
-
+        <!-- Fetch and Display Post Images -->
         <?php 
-        // images
         $imageQuery = $dbCon->prepare("
             SELECT i.media 
-            FROM Post_Images pi 
+            FROM post_images pi 
             JOIN Images i ON pi.imageID = i.imageID 
             WHERE pi.postID = :postID
         ");
@@ -45,42 +44,51 @@ foreach ($getPosts as $getPost): ?>
             <div>No images available</div>
         <?php endif; ?>
 
-        <!-- Delete Post Link -->
-        <div><a href="adminPanel/deletePost.php?ID=<?= $getPost['postID'] ?>" class="btn materialize-red">Delete Post</a></div>
-
-        <!-- Comments Dropdown -->
-        <div class="comments-dropdown">
-            <button onclick="toggleDropdown('comments-<?= $getPost['postID'] ?>')">View Comments</button>
-            <div id="comments-<?= $getPost['postID'] ?>" class="dropdown-content">
-                <?php 
-                // comments for this post
-                $commentsQuery = $dbCon->prepare("
-                    SELECT c.postID, c.content, u.username
-                    FROM Posts c
-                    LEFT JOIN Users u ON c.userID = u.userID
-                    WHERE c.parentPostID = :postID AND c.type = 'comment'
-                    ORDER BY c.created_at ASC
-                ");
-                $commentsQuery->bindParam(':postID', $getPost['postID']);
-                $commentsQuery->execute();
-                $comments = $commentsQuery->fetchAll(PDO::FETCH_ASSOC);
-
-                if ($comments):
-                    foreach ($comments as $comment): ?>
-                        <div class="comment">
-                            <strong>Comment by:</strong> <?= htmlspecialchars($comment['username']) ?>
-                            <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
-                            <a href="adminPanel/deleteComment.php?ID=<?= $comment['postID'] ?>" class="btn materialize-red">Delete Comment</a>
-                        </div>
-                    <?php endforeach;
-                else: ?>
-                    <div>No comments available</div>
-                <?php endif; ?>
+        <div class="button-row">
+            <div><a href="adminPanel/deletePost.php?ID=<?= $getPost['postID'] ?>" class="btn materialize-red">Delete Post</a></div>
+            <div>
+                <a href="adminPanel/deleteAndBan.php?postID=<?= $getPost['postID'] ?>&userID=<?= $getPost['userID'] ?>" 
+                class="btn materialize-grey">
+                Delete & Ban User
+                </a>
             </div>
         </div>
+
+        <!-- Comments Dropdown -->
+            <div class="comments-section">
+                <button onclick="toggleComments('comments-<?= $getPost['postID'] ?>')" class="btn materialize-blue">Toggle Comments</button>
+                <div id="comments-<?= $getPost['postID'] ?>" class="comments-content">
+                    <?php 
+                    // Fetch comments for this post
+                    $commentsQuery = $dbCon->prepare("
+                        SELECT c.postID, c.content, u.username
+                        FROM Posts c
+                        LEFT JOIN Users u ON c.userID = u.userID
+                        WHERE c.parentPostID = :postID AND c.type = 'comment'
+                        ORDER BY c.created_at ASC
+                    ");
+                    $commentsQuery->bindParam(':postID', $getPost['postID']);
+                    $commentsQuery->execute();
+                    $comments = $commentsQuery->fetchAll(PDO::FETCH_ASSOC);
+
+                    if ($comments): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="comment">
+                                <strong>Comment by:</strong> <?= htmlspecialchars($comment['username']) ?><br>
+                                <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+                                <?php if (!empty($comment['commentImage'])): ?>
+                                    <img src="data:image/jpeg;base64,<?= base64_encode($comment['commentImage']) ?>" alt="Comment Image" class="comment-image">
+                                <?php endif; ?>
+                                <a href="adminPanel/deletePost.php?ID=<?= $comment['postID'] ?>" class="btn materialize-red">Delete Comment</a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div>No comments available</div>
+                    <?php endif; ?>
+                </div>
+            </div>
     </div>
 <?php endforeach; ?>
-
 
 
 <style>
@@ -95,35 +103,42 @@ foreach ($getPosts as $getPost): ?>
         height: auto;
         border-radius: 8px;
     }
-    .comments-dropdown {
-        margin-top: 10px;
+    .comments-section {
+        margin-top: 20px;
     }
-    .dropdown-content {
-        display: none; 
-        position: absolute; 
-        top: 100%; 
-        left: 0;
-        width: 100%; 
-        padding: 10px;
-        border: 1px solid #ccc;
+    .comments-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
         background-color: #f9f9f9;
+        padding: 0 10px;
         border-radius: 8px;
-        z-index: 1; 
+    }
+    .comments-content.active {
+        max-height: 500px; /* Set an appropriate max height */
+        padding: 10px;
     }
     .comment {
         border-bottom: 1px solid #ddd;
         padding: 8px 0;
+        margin-bottom: 10px;
+    }
+    .button-row {
+        display: flex;
+        gap: 15px;
     }
 </style>
 
 <script>
-    function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        
-        if (dropdown.style.display === "none" || dropdown.style.display === "") {
-            dropdown.style.display = "block";
+    function toggleComments(id) {
+        const commentsDiv = document.getElementById(id);
+
+        if (commentsDiv.classList.contains('active')) {
+            commentsDiv.style.maxHeight = null; // Collapse
+            commentsDiv.classList.remove('active');
         } else {
-            dropdown.style.display = "none";
+            commentsDiv.style.maxHeight = commentsDiv.scrollHeight + "px"; // Expand
+            commentsDiv.classList.add('active');
         }
     }
 </script>

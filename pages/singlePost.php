@@ -9,7 +9,7 @@ if (!isset($_GET['postID'])) {
 
 $postID = $_GET['postID'];
 
-//post details
+// Fetch the post details
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.username 
     FROM Posts p 
@@ -25,7 +25,7 @@ if (!$post) {
     exit();
 }
 
-//comments
+// Fetch comments for the post
 $commentQuery = $dbCon->prepare("
     SELECT p.*, u.username 
     FROM Posts p 
@@ -37,10 +37,10 @@ $commentQuery->bindParam(':postID', $postID, PDO::PARAM_INT);
 $commentQuery->execute();
 $comments = $commentQuery->fetchAll(PDO::FETCH_ASSOC);
 
-//images
+// Fetch images for the post
 $imageQuery = $dbCon->prepare("
     SELECT i.media 
-    FROM Post_Images pi 
+    FROM post_images pi 
     JOIN Images i ON pi.imageID = i.imageID 
     WHERE pi.postID = :postID
 ");
@@ -48,7 +48,7 @@ $imageQuery->bindParam(':postID', $postID, PDO::PARAM_INT);
 $imageQuery->execute();
 $images = $imageQuery->fetchAll(PDO::FETCH_COLUMN);
 
-//likes count
+// Fetch likes count and whether the user liked the post
 function getLikes($postId, $dbCon) {
     $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
     $likeQuery->bindParam(':postID', $postId);
@@ -77,6 +77,8 @@ $userLiked = userHasLiked($postID, $_SESSION['userID'], $dbCon);
 <body>
 
 <div class="single-post-container">
+    <!-- Image Section with Slider -->
+    <!-- Slider for images -->
     <div class="all-post">
             <div class="post-image-slider" id="slider-<?= $postID ?>">
                 <div class="slider">
@@ -117,37 +119,37 @@ $userLiked = userHasLiked($postID, $_SESSION['userID'], $dbCon);
     <h3>Comments</h3>
     
     <div class="comments">
-        <?php if (count($comments) > 0): ?>
-            <?php foreach ($comments as $comment): ?>
-                <div class="comment">
-                    <strong><?= htmlspecialchars($comment['username']) ?></strong>
-                    <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
-                    <?php if (!empty($comment['image'])): ?>
-                        <img src="data:image/jpeg;base64,<?= base64_encode($comment['image']) ?>" alt="Comment Image" class="comment-image">
-                    <?php endif; ?>
-                    
-                    <!-- Like button for each comment -->
-                    <?php 
-                        $commentLikeCount = getLikes($comment['postID'], $dbCon);
-                        $userLikedComment = userHasLiked($comment['postID'], $_SESSION['userID'], $dbCon);
-                    ?>
-                    <span><?= $commentLikeCount ?> likes</span>
-                    <button onclick="toggleLike(<?= $comment['postID'] ?>)" 
-                            style="color: <?= $userLikedComment ? 'blue' : 'gray' ?>;">
-                        <?= $userLikedComment ? 'Unlike' : 'Like' ?>
-                    </button>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No comments yet. Be the first to comment!</p>
-        <?php endif; ?>
-    </div>
+    <?php if (count($comments) > 0): ?>
+        <?php foreach ($comments as $comment): ?>
+            <div class="comment">
+                <strong><?= htmlspecialchars($comment['username']) ?></strong>
+                <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+                <?php if (!empty($comment['commentImage'])): ?>
+                    <img src="data:image/jpeg;base64,<?= base64_encode($comment['commentImage']) ?>" alt="Comment Image" class="comment-image">
+                <?php endif; ?>
+
+                <!-- Like button for each comment -->
+                <?php 
+                    $commentLikeCount = getLikes($comment['postID'], $dbCon);
+                    $userLikedComment = userHasLiked($comment['postID'], $_SESSION['userID'], $dbCon);
+                ?>
+                <span><?= $commentLikeCount ?> likes</span>
+                <button class="like-button" onclick="toggleLike(<?= $comment['postID'] ?>)" 
+                        style="color: <?= $userLikedComment ? 'blue' : 'gray' ?>;">
+                    <?= $userLikedComment ? 'Unlike' : 'Like' ?>
+                </button>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No comments yet. Be the first to comment!</p>
+    <?php endif; ?>
+</div>
     
     <!-- Form for posting a new comment -->
     <form action="posts/addComment.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="parentPostID" value="<?= $postID ?>">
         <textarea name="content" placeholder="Add a comment..." required></textarea>
-        <input type="file" name="image" accept="image/*">
+        <input type="file" name="commentImage" accept="image/*"> <!-- Optional image input for comment -->
         <button type="submit">Post Comment</button>
     </form>
 </div>
@@ -258,30 +260,47 @@ $userLiked = userHasLiked($postID, $_SESSION['userID'], $dbCon);
     color: gray;
 }
 
-/* Comment Section */
-.comment-section {
-    margin-top: 20px;
-}
-
-.comment-section h3 {
-    margin-bottom: 10px;
-}
-
-.comments {
+.comment {
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
 }
 
-.comments p {
-    font-size: 14px;
+.comment strong {
+    font-size: 16px;
     color: #333;
 }
 
-textarea {
-    width: 100%;
-    padding: 8px;
+.comment p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.comment-image {
+    display: block;
+    max-width: 150px;  /* Small image size */
+    margin-top: 10px;  /* Space between content and image */
+    margin-bottom: 10px;  /* Space below the image */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.comment .like-button {
     margin-top: 10px;
+    background-color: #662483;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.comment .like-button:hover {
+    background-color: #550f70;
 }
 </style>
 

@@ -15,11 +15,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->rowCount() > 0) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Check if user is banned
+            if ($user['isBanned']) {
+                echo "Your account has been banned.";
+                exit();
+            }
+
         if (password_verify($password, $user['password'])) {
             // Password is correct, start session
             $_SESSION['userID'] = $user['userID'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['userRole'] = $user['userRole'];
 
+            // Redirect after a short delay
             header("Refresh: 1; url=../index.php");
             echo "Login successful! Redirecting...";
             exit();

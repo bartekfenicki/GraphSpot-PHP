@@ -1,7 +1,7 @@
 <?php 
 $dbCon = dbCon($user, $DBpassword);
 
-// info message
+// Fetch the welcome message
 $privacyQuery = $dbCon->prepare("SELECT content FROM siteInformation WHERE infoID = 2");
 $privacyQuery->execute();
 $privacyPolicy = $privacyQuery->fetch(PDO::FETCH_ASSOC);
@@ -44,6 +44,7 @@ $termsConditions = $termsQuery->fetch(PDO::FETCH_ASSOC);
 
 <script>
 
+//tab switcher  
 function openTab(evt, tabName) {
     const tabcontent = document.getElementsByClassName("tabcontent");
     for (let i = 0; i < tabcontent.length; i++) {
@@ -57,6 +58,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
+// Default tab open
 document.getElementById("defaultOpen").click();
 </script>
 

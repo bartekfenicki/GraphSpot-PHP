@@ -3,28 +3,12 @@
 require_once "dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
-// Fetch likes count and check if the current user has liked each post
-function getLikes($postId, $dbCon) {
-    $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
-    $likeQuery->bindParam(':postID', $postId);
-    $likeQuery->execute();
-    return $likeQuery->fetchColumn();
-}
 
-function userHasLiked($postId, $userId, $dbCon) {
-    $userLikeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID AND userID = :userID");
-    $userLikeQuery->bindParam(':postID', $postId);
-    $userLikeQuery->bindParam(':userID', $userId);
-    $userLikeQuery->execute();
-    return $userLikeQuery->fetchColumn() > 0;
-}
-
-// Fetch posts along with their users
 $queryPost = $dbCon->prepare("
     SELECT p.*, u.userID, u.username
     FROM Posts p
     LEFT JOIN Users u ON p.userID = u.userID
-    WHERE p.type = 'post'
+    WHERE p.type = 'post' AND p.isPinned = 1
     ORDER BY p.created_at DESC
 ");
 $queryPost->execute();
