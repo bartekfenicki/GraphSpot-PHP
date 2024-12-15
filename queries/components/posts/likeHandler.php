@@ -8,26 +8,26 @@ $data = json_decode(file_get_contents("php://input"), true);
 $postID = $data['postID'];
 $userID = $_SESSION['userID'];
 
-$likeCheck = $dbCon->prepare("SELECT * FROM Likes WHERE postID = :postID AND userID = :userID");
+$likeCheck = $dbCon->prepare("SELECT * FROM likes WHERE postID = :postID AND userID = :userID");
 $likeCheck->bindParam(':postID', $postID);
 $likeCheck->bindParam(':userID', $userID);
 $likeCheck->execute();
 
 if ($likeCheck->rowCount() > 0) {
-    $removeLike = $dbCon->prepare("DELETE FROM Likes WHERE postID = :postID AND userID = :userID");
+    $removeLike = $dbCon->prepare("DELETE FROM likes WHERE postID = :postID AND userID = :userID");
     $removeLike->bindParam(':postID', $postID);
     $removeLike->bindParam(':userID', $userID);
     $removeLike->execute();
     $userLiked = false;
 } else {
-    $addLike = $dbCon->prepare("INSERT INTO Likes (postID, userID) VALUES (:postID, :userID)");
+    $addLike = $dbCon->prepare("INSERT INTO likes (postID, userID) VALUES (:postID, :userID)");
     $addLike->bindParam(':postID', $postID);
     $addLike->bindParam(':userID', $userID);
     $addLike->execute();
     $userLiked = true;
 }
 
-$likeCountQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
+$likeCountQuery = $dbCon->prepare("SELECT COUNT(*) FROM likes WHERE postID = :postID");
 $likeCountQuery->bindParam(':postID', $postID);
 $likeCountQuery->execute();
 $likeCount = $likeCountQuery->fetchColumn();

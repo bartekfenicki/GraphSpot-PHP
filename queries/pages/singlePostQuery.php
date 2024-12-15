@@ -45,14 +45,14 @@ class singlePostQueries {
     }
 
     public function getLikesCount($postID) {
-        $query = $this->dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
+        $query = $this->dbCon->prepare("SELECT COUNT(*) FROM likes WHERE postID = :postID");
         $query->bindParam(':postID', $postID, PDO::PARAM_INT);
         $query->execute();
         return $query->fetchColumn();
     }
 
     public function userHasLiked($postID, $userID) {
-        $query = $this->dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID AND userID = :userID");
+        $query = $this->dbCon->prepare("SELECT COUNT(*) FROM likes WHERE postID = :postID AND userID = :userID");
         $query->bindParam(':postID', $postID, PDO::PARAM_INT);
         $query->bindParam(':userID', $userID, PDO::PARAM_INT);
         $query->execute();

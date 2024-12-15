@@ -10,7 +10,7 @@ class profileQueries {
     public function getUserProfile($userID) {
         $query = $this->dbCon->prepare("
             SELECT * 
-            FROM UserProfileView 
+            FROM userprofileview 
             WHERE userID = :userID
         ");
         $query->execute([':userID' => $userID]);

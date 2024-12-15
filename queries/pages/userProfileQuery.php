@@ -37,7 +37,7 @@ class UserProfileQueries {
     public function getLikedPosts($profileUserID) {
         $query = $this->dbCon->prepare("
             SELECT p.*, u.username, i.media AS first_image
-            FROM Likes l
+            FROM likes l
             JOIN Posts p ON l.postID = p.postID
             JOIN Users u ON p.userID = u.userID
             LEFT JOIN post_images pi ON p.postID = pi.postID

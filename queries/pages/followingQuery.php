@@ -10,7 +10,7 @@ class FollowingQueries {
     public function getFollowings($userID) {
         $query = $this->dbCon->prepare("
             SELECT followedID, followedUsername, followedProfilePic
-            FROM FollowingsView
+            FROM followingsview
             WHERE followerID = :userID
             ORDER BY followedUsername ASC
         ");

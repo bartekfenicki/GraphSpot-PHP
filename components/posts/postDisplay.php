@@ -3,14 +3,14 @@ require_once "queries/dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
 
 function getLikes($postId, $dbCon) {
-    $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID");
+    $likeQuery = $dbCon->prepare("SELECT COUNT(*) FROM likes WHERE postID = :postID");
     $likeQuery->bindParam(':postID', $postId);
     $likeQuery->execute();
     return $likeQuery->fetchColumn();
 }
 
 function userHasLiked($postId, $userId, $dbCon) {
-    $userLikeQuery = $dbCon->prepare("SELECT COUNT(*) FROM Likes WHERE postID = :postID AND userID = :userID");
+    $userLikeQuery = $dbCon->prepare("SELECT COUNT(*) FROM likes WHERE postID = :postID AND userID = :userID");
     $userLikeQuery->bindParam(':postID', $postId);
     $userLikeQuery->bindParam(':userID', $userId);
     $userLikeQuery->execute();
@@ -84,7 +84,7 @@ $getPosts = $queryPost->fetchAll(PDO::FETCH_ASSOC);
                 <?php 
                 $imageQuery = $dbCon->prepare("
                     SELECT i.media 
-                    FROM Post_Images pi 
+                    FROM post_images pi 
                     JOIN Images i ON pi.imageID = i.imageID 
                     WHERE pi.postID = :postID
                 ");
