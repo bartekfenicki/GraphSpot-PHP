@@ -1,0 +1,9 @@
+# Allow all bots to crawl the entire website
+User-agent: *
+
+Disallow: /startPage.php
+Disallow: /adminPanel/
+Disallow: /queries/
+
+# Sitemap URL
+Sitemap: http://localhost/graphSpot-test/sitemap.php

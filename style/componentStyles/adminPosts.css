@@ -1,0 +1,40 @@
+.image-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.image-box img {
+    max-width: 200px;
+    max-height: 200px;
+    height: auto;
+    border-radius: 8px;
+}
+.comments-section {
+    margin-top: 20px;
+}
+.comments-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #f9f9f9;
+    padding: 0 10px;
+    border-radius: 8px;
+}
+.comments-content.active {
+    max-height: 500px; /* Set an appropriate max height */
+    padding: 10px;
+}
+.comment {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+    margin-bottom: 10px;
+}
+.comment img {
+    max-width: 200px;
+    max-height: 200px;
+
+}
+.button-row {
+    display: flex;
+    gap: 15px;
+}

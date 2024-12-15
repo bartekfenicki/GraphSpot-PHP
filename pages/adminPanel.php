@@ -1,29 +1,23 @@
 <?php
-// DB connection
-require_once "dbcon.php";
+require_once "queries/dbcon.php";
 $dbCon = dbCon($user, $DBpassword);
-
 
 if (!isset($_SESSION['userID']) || $_SESSION['userRole'] !== 'admin') {
     header("Location: ../index.php"); 
     exit();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <!-- Materialize CSS Framework -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="style/pageStyles/adminStyle.css">
 </head>
 
 <body>
-
-    <!-- Tab Navigation -->
+    <!-- Tabs-->
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Posts')" id="defaultOpen">Posts</button>
         <button class="tablinks" onclick="openTab(event, 'Users')">Users</button>
@@ -31,89 +25,26 @@ if (!isset($_SESSION['userID']) || $_SESSION['userRole'] !== 'admin') {
         <button class="tablinks" onclick="openTab(event, 'SiteInfo')">Site Information</button>
     </div>
 
-    <!-- Posts Tab Content -->
+    <!-- Posts Tab -->
     <div id="Posts" class="tabcontent">
-        <?php include "adminPanel/adminPosts.php";?>
+        <?php include "components/adminPanel/adminPosts.php";?>
     </div>
 
-    <!-- Users Tab Content -->
+    <!-- Users Tab -->
     <div id="Users" class="tabcontent">
-        <?php include "adminPanel/adminUsers.php";?>
+        <?php include "components/adminPanel/adminUsers.php";?>
     </div>
 
-    <!-- Style Tab Content -->
+    <!-- Style Tab -->
     <div id="Styling" class="tabcontent">
-        <?php include "adminPanel/adminStyling.php";?>
+        <?php include "components/adminPanel/adminStyling.php";?>
     </div>
 
-     <!-- Site info Tab Content -->
+     <!-- Site info Tab -->
      <div id="SiteInfo" class="tabcontent">
-        <?php include "adminPanel/adminSiteInfo.php";?>
+        <?php include "components/adminPanel/adminSiteInfo.php";?>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-    <script>
-
-        //tab switcher  
-        function openTab(evt, tabName) {
-            const tabcontent = document.getElementsByClassName("tabcontent");
-            for (let i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            const tablinks = document.getElementsByClassName("tablinks");
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-
-        // Default tab open
-        document.getElementById("defaultOpen").click();
-    </script>
-
-    <!-- Styling -->
-    <style scoped>
-        .container {
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            border-bottom: 1px solid #ddd;
-        }
-        .container div {
-            margin: 5px 0;
-        }
-
-        /* Tab styles */
-        .tab {
-            overflow: hidden;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
-            display: flex;
-            justify-content: center;
-        }
-        .tab button {
-            background-color: inherit;
-            border: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        .tab button:hover {
-            border-bottom: 2px solid #66248377;
-        }
-        .tab button.active {
-            border-bottom: 2px solid #662483;
-        }
-        .tabcontent {
-            display: none;
-            padding: 12px;
-        }
-    </style>
-
+    <script src="scripts/pages/adminPanel.js"></script> 
 </body>
 </html>

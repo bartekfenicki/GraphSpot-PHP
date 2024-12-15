@@ -1,0 +1,37 @@
+/* home styles */
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+    background-color: white;
+    padding: 10px 0;
+}
+
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    border-bottom: 2px solid #662483;
+}
+
+.tab button.active {
+    border-bottom: 2px solid #662483;
+    font-weight: bold;
+}
+
+/* Tab Content */
+.tabcontent {
+    display: none;
+    padding: 20px;
+    background-color: white;
+}

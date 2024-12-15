@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# If the requested resource doesn't exist as a file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirect clean URLs to index.php with the 'page' query parameter
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?page=$1 [L,QSA]
+
+# Handle edge case for root URL `/`
+RewriteRule ^$ index.php?page=home [L,QSA]

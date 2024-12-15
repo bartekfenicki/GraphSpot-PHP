@@ -1,0 +1,80 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+.tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+.tab.active {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+.search-form {
+    margin-bottom: 20px;
+}
+.post, .user {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+/* Styling for posts grid and individual post cards */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.post-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post h3 {
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+
+.post p {
+    font-size: 14px;
+    color: #555;
+}
+.post .username-post-display {
+    font-size: 16px;
+    color: #8523da;
+}
+
+.post-image {
+    width: 100%;
+    height: 250px; /* Fixed height to maintain square form */
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image covers the square area */
+    border-radius: 8px;
+}
+
+/* Additional styling for the results section */
+.results {
+    margin-top: 20px;
+}

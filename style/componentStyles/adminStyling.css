@@ -1,0 +1,10 @@
+/* Highlight the active style option */
+#style-options .style-option {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#style-options .style-option input[type="radio"]:checked + label {
+    font-weight: bold;
+    color: #4CAF50;
+}

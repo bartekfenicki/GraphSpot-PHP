@@ -1,0 +1,145 @@
+    /* Container for single post */
+    .single-post-container {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .post-image-slider {
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        height: 600px;
+        border: 2px solid #662483;
+        border-radius: 20px;
+        background-color: #00000022;
+        display: flex;
+        align-items: center;
+    }
+    
+    .slider {
+        display: flex;
+        transition: transform 0.5s ease;
+        align-items: center;
+    }
+    
+    .slide {
+        min-width: 100%;
+        transition: opacity 0.5s ease;
+    }
+    
+    .slide.active {
+        opacity: 1;
+    }
+    
+        .post-image-slider img {
+            max-width: 100%;
+            min-width: 100%;
+        }
+    
+        .no-image {
+            color: #aaa;
+            font-style: italic;
+        }
+    
+         /* Button styles */
+         .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: background-color 0.3s;
+            z-index: 1;
+        }
+    
+        .prev:hover, .next:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    
+        .prev {
+            left: 10px;
+        }
+    
+        .next {
+            right: 10px;
+        }
+    
+    /* Post information section */
+    .post-info-section {
+        flex: 1;
+        padding: 10px;
+    }
+    
+    .post-info-section h2 {
+        font-size: 24px;
+        margin: 0;
+    }
+    
+    .location {
+        color: gray;
+    }
+    
+    .content {
+        margin-top: 10px;
+        font-size: 18px;
+    }
+    
+    .interaction-buttons {
+        margin-top: 15px;
+    }
+    
+    .like-button, .save-button {
+        cursor: pointer;
+        font-size: 16px;
+        color: gray;
+    }
+    
+    .comment {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+    
+    .comment strong {
+        font-size: 16px;
+        color: #333;
+    }
+    
+    .comment p {
+        font-size: 14px;
+        color: #555;
+        margin-top: 5px;
+    }
+    
+    .comment-image {
+        display: block;
+        max-width: 150px;
+        max-height: 150px;  /* Small image size */
+        margin-top: 10px;  /* Space between content and image */
+        margin-bottom: 10px;  /* Space below the image */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .comment .like-button {
+        margin-top: 10px;
+        background-color: #662483;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    
+    .comment .like-button:hover {
+        background-color: #550f70;
+    }
